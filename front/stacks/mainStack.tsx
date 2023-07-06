@@ -1,6 +1,6 @@
 import React from 'react'
 import { createStackNavigator,StackNavigationProp } from '@react-navigation/stack';
-import Login from '../screens/Login';
+import Login from '../screens/Login/Login';
 import Preload from '../screens/PreLoad/Preload';
 
 
