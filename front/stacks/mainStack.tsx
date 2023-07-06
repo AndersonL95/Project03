@@ -1,10 +1,17 @@
 import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator,StackNavigationProp } from '@react-navigation/stack';
 import Login from '../screens/Login';
-import Preload from '../screens/Preload';
+import Preload from '../screens/PreLoad/Preload';
 
 
 const Stack = createStackNavigator();
+
+type StackNavigation = {
+    PreLoad: undefined;
+    Login: undefined;
+}
+export type stackTypes = StackNavigationProp<StackNavigation>
+
 const MainStack = () => {
     return(
         <Stack.Navigator
