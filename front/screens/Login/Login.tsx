@@ -1,14 +1,75 @@
-import React,{ FunctionComponent} from "react";
+import React,{useState} from "react";
 import { StatusBar } from "expo-status-bar";
 import { LoginContainer, TopSection, TopImage, BottomSection, MiddleSetion } from "./style";
 import logo from '../../assets/logo.png';
-import { TextInput } from "react-native";
 import { MyTextInput } from "../../components/Texts/MyTextInput";
 import { MyButton } from "../../components/Buttons/MyButton";
+import { useAuth } from "../../api/Auth";
+import { Route, useNavigation } from "@react-navigation/native";
+import { stackTypes } from "../../stacks/mainStack";
+import { InforData } from "../../api/ServiceApi";
 
 
+const Login = () => {
 
-const Login: FunctionComponent = () => {
+    const navigation = useNavigation<stackTypes>();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [user,setUser] = useState<Array<[]>>([]);     
+    const {logIn} = useAuth();
+    //const {infor} = useInfor()
+    const handleSignClick = async () => {
+        try {
+            setTimeout(async()=>{
+                if(email != '' && password != '') {
+                    const res:void = await logIn(email, password)
+                        if(res !=null){
+                          //console.log("MEUTOKEN: "+ res)
+                         await InforData()
+                            .then((data)=>{
+                                console.log("MEUS DADOS: ",data.user.cargo)
+                                if(data.user.cargo === 'admin'){
+                                    
+                                    navigation.push('AdminTab',{
+                                        id: data.user._id ,
+                                        name: data.user.name,
+                                        email: data.user.email,
+                                        cargo: data.user.cargo,
+                                        verified: data.user.verified,
+                                        password: data.user.password
+                                    })
+                                }else{
+                                    navigation.reset({
+                                        index: 1,
+                                        routes: [
+                                          {
+                                            name: 'MainTab', 
+                                            params:{
+                                                id: data.user._id,
+                                                name:data.user.name,
+                                                email:data.user.email,
+                                                cargo: data.user.cargo,
+                                                verified: data.user.verified,
+                                                password: data.user.password
+
+                                             } 
+                                          },
+                                        ],
+                                      }) 
+                                }
+                            })
+                            //console.log("FINAL")
+
+                        }
+                }   
+            },3000)
+           
+            /**c*/
+        } catch (error:any) {
+            alert(error.response.data.message)
+        }
+    }
+
     return (
         <>
             <StatusBar style="light"/>
@@ -17,14 +78,37 @@ const Login: FunctionComponent = () => {
                     <TopImage source={logo}/>
                 </TopSection>
                 <MiddleSetion>
-                    <MyTextInput placeholder="E-mail" />
-                    <MyTextInput placeholder="Senha" />
+                    <MyTextInput 
+                        placeholder="E-mail" 
+                        value={email} 
+                        onChangeText={setEmail}    
+                    />
+                    <MyTextInput 
+                        placeholder="Senha" 
+                        value={password}
+                        onChangeText={setPassword}    
+                    />
                 </MiddleSetion>
                 <BottomSection>
-                    <MyButton title="Entrar"/>
+                    <MyButton
+                        title="Entrar"
+                        onPress={handleSignClick}    
+                    />
                 </BottomSection>
             </LoginContainer>
         </>
     )
 }
 export default Login;
+/**if(res == null){
+                    navigation.reset({
+                        index: 1,
+                        routes: [
+                          { name: 'Home' },
+                        ],
+                      })
+                  console.log("RESPONSE:")
+                }
+            }else {
+               return Alert.alert('Campo vazio!');
+            } */
