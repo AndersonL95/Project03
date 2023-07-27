@@ -8,6 +8,7 @@ import { useAuth } from "../../api/Auth";
 import { Route, useNavigation } from "@react-navigation/native";
 import { stackTypes } from "../../stacks/mainStack";
 import { InforData } from "../../api/ServiceApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Login = () => {
@@ -27,16 +28,17 @@ const Login = () => {
                           //console.log("MEUTOKEN: "+ res)
                          await InforData()
                             .then((data)=>{
-                                console.log("MEUS DADOS: ",data.user.cargo)
+                               // console.log("MEUS DADOS: ",data.user)
                                 if(data.user.cargo === 'admin'){
-                                    
+
                                     navigation.push('AdminTab',{
                                         id: data.user._id ,
                                         name: data.user.name,
                                         email: data.user.email,
                                         cargo: data.user.cargo,
                                         verified: data.user.verified,
-                                        password: data.user.password
+                                        password: data.user.password,
+                                        picture: data.user.picture
                                     })
                                 }else{
                                     navigation.reset({
@@ -62,7 +64,7 @@ const Login = () => {
 
                         }
                 }   
-            },3000)
+            },1000)
            
             /**c*/
         } catch (error:any) {

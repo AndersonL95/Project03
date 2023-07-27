@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import {TabArea, TabItem, ImageIcon, NewsIcon, StudentIcon, ProfileIcon} from './styles'
+import {TabAreaAdmin, TabItem, ImageIcon, NewsIcon, StudentIcon, ProfileIcon} from './styles'
 import HomeIcon from '../../assets/home.png';
 import IconStud from '../../assets/aluna.png';
 import AccountIcon from '../../assets/conta.png';
@@ -21,7 +21,7 @@ export const MyTabBar = ({ state, descriptors, navigation }: TabBarProps) => {
     }
 
     return (
-        <TabArea>
+        <TabAreaAdmin>
             <TabItem onPress={()=>goTo('HomeAdmin')}>
                 <ImageIcon source={HomeIcon}style={{opacity: state.index===0? 1 : 0.5}}/>
             </TabItem>
@@ -36,7 +36,7 @@ export const MyTabBar = ({ state, descriptors, navigation }: TabBarProps) => {
             </TabItem>
             
             
-        </TabArea>
+        </TabAreaAdmin>
     );
 }
 /**<TabItem onPress={()=>goTo('Favorites')}>

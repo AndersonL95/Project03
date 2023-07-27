@@ -18,9 +18,9 @@ export default function Preload() {
       const token = await AsyncStorage.getItem('projectToken');
       if(token) {
 
-        await InforData()
+      /*  await InforData()
         .then((data)=>{
-            console.log("MEUS DADOS: ",data.user.cargo)
+            //console.log("MEUS DADOS: ",data.user.cargo)
             if(data.user.cargo === 'admin'){
                 
                 navigation.push('AdminTab',{
@@ -29,7 +29,8 @@ export default function Preload() {
                     email: data.user.email,
                     cargo: data.user.cargo,
                     verified: data.user.verified,
-                    password: data.user.password
+                    password: data.user.password,
+                    picture: data.user.picture
                 })
             }else{
                 navigation.reset({
@@ -51,7 +52,14 @@ export default function Preload() {
                   }) 
             }
         })
+        */
+        setTimeout(() => {
+          setLoad(true);
+          navigation.navigate('Login')
+        }, 3000);
         
+        
+      
       }else {
         setTimeout(() => {
           setLoad(true);

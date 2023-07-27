@@ -1,8 +1,14 @@
 import styled from "styled-components/native";
+import { colors } from "../colors";
 
 export const TabArea = styled.View`
     height: 60px;
     background-color: #4EADBE;
+    flex-direction: row;
+`;
+export const TabAreaAdmin = styled.View`
+    height: 60px;
+    background-color: ${colors.primary};
     flex-direction: row;
 `;
 export const TabItem = styled.TouchableOpacity`

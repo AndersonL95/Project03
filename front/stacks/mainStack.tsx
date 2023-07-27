@@ -15,7 +15,7 @@ type StackNavigation = {
     PreLoad: undefined;
     Login: undefined;
     MainTab: undefined
-    AdminTab: {id:number,name:string,email:string,cargo:string,verified:boolean,password:string}
+    AdminTab: {id:number,name:string,email:string,cargo:string,verified:boolean, picture:any,password:string}
     
 }
 export type ParamsData = RouteProp<StackNavigation> 
