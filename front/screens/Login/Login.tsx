@@ -1,22 +1,25 @@
 import React,{useState} from "react";
 import { StatusBar } from "expo-status-bar";
-import { LoginContainer, TopSection, TopImage, BottomSection, MiddleSetion } from "./style";
+import { LoginContainer, TopSection, TopImage, BottomSection, MiddleSetion, PasswordArea, PassInput } from "./style";
 import logo from '../../assets/logo.png';
 import { MyTextInput } from "../../components/Texts/MyTextInput";
 import { MyButton } from "../../components/Buttons/MyButton";
 import { useAuth } from "../../api/Auth";
-import { Route, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { stackTypes } from "../../stacks/mainStack";
 import { InforData } from "../../api/ServiceApi";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTogglePasswordVisibility } from "../../components/useTogglePasswordVisibility";
+import { Pressable } from "react-native";
+import Spinner from "../../components/Spinner";
 
 
 const Login = () => {
-
+    const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
     const navigation = useNavigation<stackTypes>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [user,setUser] = useState<Array<[]>>([]);     
+    const [loadding,setLoadding] = useState<String>('')
     const {logIn} = useAuth();
     //const {infor} = useInfor()
     const handleSignClick = async () => {
@@ -25,6 +28,7 @@ const Login = () => {
                 if(email != '' && password != '') {
                     const res:void = await logIn(email, password)
                         if(res !=null){
+                            setLoadding('loggin in')
                           //console.log("MEUTOKEN: "+ res)
                          await InforData()
                             .then((data)=>{
@@ -41,6 +45,7 @@ const Login = () => {
                                         picture: data.user.picture
                                     })
                                 }else{
+                                    setLoadding('loggin in')
                                     navigation.reset({
                                         index: 1,
                                         routes: [
@@ -58,6 +63,7 @@ const Login = () => {
                                           },
                                         ],
                                       }) 
+                                     
                                 }
                             })
                             //console.log("FINAL")
@@ -74,8 +80,12 @@ const Login = () => {
 
     return (
         <>
+        
             <StatusBar style="light"/>
             <LoginContainer>
+               {
+                loadding === 'loggin in' ? <Spinner/> : ""
+               }
                 <TopSection>
                     <TopImage source={logo}/>
                 </TopSection>
@@ -84,12 +94,28 @@ const Login = () => {
                         placeholder="E-mail" 
                         value={email} 
                         onChangeText={setEmail}    
+                        keyboardType="email-address"
                     />
-                    <MyTextInput 
+                    <PasswordArea>
+                    <PassInput 
                         placeholder="Senha" 
                         value={password}
-                        onChangeText={setPassword}    
+                        secureTextEntry={passwordVisibility}
+                        onChangeText={setPassword}
                     />
+                     <Pressable 
+                        onPress={handlePasswordVisibility}
+                        
+                    >
+                        <MaterialCommunityIcons 
+                            name={rightIcon} 
+                            size={22} 
+                            color="#232323"  
+                            style={{position:'absolute',right:10, marginTop:20}}    
+                        />
+                    </Pressable>
+                    </PasswordArea>
+                   
                 </MiddleSetion>
                 <BottomSection>
                     <MyButton
