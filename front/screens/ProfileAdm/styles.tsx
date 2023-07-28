@@ -12,13 +12,16 @@ export const TopSection = styled.View`
     width: 100%;
     height: 30%;
     align-items: center;
+    margin-top: 25px;
     
 `;
-export const LogoutBtn = styled(MyButton)`
-    width: 70px;
+export const LogoutBtn = styled.TouchableOpacity`
+    width: 95%;
     height: 40px;
-    border-radius: 5px;
-    margin-right: 10px;
+    margin-top: 30px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `;
 export const LogoutArea = styled.View`
     width: 100%;
@@ -38,4 +41,18 @@ export const UserName = styled.Text`
 export const UserEmail = styled.Text`
   font-size: 16px;
   margin-top: 5px;
+`;
+export const ModalBottom = styled.View`
+  width:100%;
+  height: 50%;
+  background-color: #fff;
+  border-radius: 45px 45px 0 0;
+  
+
+`;
+export const TextModal = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 20px;
+
 `;

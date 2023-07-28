@@ -27,7 +27,10 @@ const MainAdmTab = () => {
     setPicture(buffer)
   },[])
   return (
-    <Tab.Navigator tabBar={props=><MyTabBar {...props} />}>
+    <Tab.Navigator
+      tabBar={props=><MyTabBar {...props}/>}
+      screenOptions={({ headerStyle: { backgroundColor: '#ff3232' },headerTitle:""})}
+    >
         <Tab.Screen name="HomeAdmin" component={Home} />
         <Tab.Screen name="NewsAdmin" component={News} />
         <Tab.Screen name="StudentAdmin" component={Students} />
