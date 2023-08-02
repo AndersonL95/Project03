@@ -1,20 +1,30 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {TabAreaAdmin, TabItem, ImageIcon, NewsIcon, StudentIcon, ProfileIcon} from './styles'
 import HomeIcon from '../../assets/home.png';
 import IconStud from '../../assets/aluna.png';
 import AccountIcon from '../../assets/conta.png';
 import IconNews from '../../assets/news.png';
-import { NavigationHelpers, ParamListBase, TabNavigationState } from '@react-navigation/native';
+import { NavigationHelpers, ParamListBase, TabNavigationState, useRoute } from '@react-navigation/native';
 import { BottomTabDescriptorMap, BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
+import { ParamsData } from '../../stacks/mainStack';
+import { Buffer } from 'buffer';
 
 
 interface TabBarProps {
     state: TabNavigationState<ParamListBase>;
     descriptors: BottomTabDescriptorMap;
     navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+    userData: ParamsData;
 }
   
 export const MyTabBar = ({ state, descriptors, navigation }: TabBarProps) => {
+    const route = useRoute<ParamsData>();
+    const[picture,setPicture] = useState(route.params?.picture);
+  useEffect(()=>{
+    var buffer = Buffer.from(picture.data).toString('base64'); 
+    setPicture(buffer)
+  },[])
+
 
     const goTo = (screenName:any) => {
         navigation.navigate(screenName);
@@ -32,7 +42,13 @@ export const MyTabBar = ({ state, descriptors, navigation }: TabBarProps) => {
                 <StudentIcon source={IconStud} style={{opacity: state.index===2? 1 : 0.5,}}  />
             </TabItem>
             <TabItem onPress={()=>goTo('ProfileAdmin')}>
-                <ProfileIcon source={AccountIcon} style={{opacity: state.index===3? 1 : 0.5,}}  />
+                {
+                    picture != ""
+                    ?<ProfileIcon source={{uri:`data:image/png;base64,${picture}` }} />
+                    :<ProfileIcon source={AccountIcon} style={{opacity: state.index===3? 1 : 0.5,}}  />
+
+
+                }
             </TabItem>
             
             

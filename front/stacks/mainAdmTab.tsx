@@ -29,7 +29,7 @@ const MainAdmTab = () => {
   return (
     <Tab.Navigator
       tabBar={props=><MyTabBar {...props}/>}
-      screenOptions={({ headerStyle: { backgroundColor: '#ff3232' },headerTitle:""})}
+      screenOptions={{ headerShown:false}}
     >
         <Tab.Screen name="HomeAdmin" component={Home} />
         <Tab.Screen name="NewsAdmin" component={News} />

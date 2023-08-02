@@ -10,12 +10,17 @@ export const ProfileContainer = styled(container)`
 `;
 export const TopSection = styled.View`
     width: 100%;
-    height: 30%;
-    align-items: center;
-    margin-top: 25px;
+    height: 100px;
+    background-color: ${colors.primary};
     
 `;
-export const LogoutBtn = styled.TouchableOpacity`
+export const TopText = styled.Text`
+  font-size: 22px;
+  color: ${colors.white};
+  margin-left: 15px;
+
+`;
+export const ModalBtns = styled.TouchableOpacity`
     width: 95%;
     height: 40px;
     margin-top: 30px;
@@ -25,7 +30,17 @@ export const LogoutBtn = styled.TouchableOpacity`
 `;
 export const LogoutArea = styled.View`
     width: 100%;
-    align-items: flex-end;
+    margin-top: 30px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+`;
+export const TopImg = styled.View`
+    width: 100%;
+    height: 30%;
+    align-items: center;
+    margin-top: 30px;
+    
 `;
 export const ImgUser = styled.Image`
     width: 130px;

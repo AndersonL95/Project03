@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
-import {ProfileContainer, TopSection, LogoutBtn, ImgUser, LogoutArea, UserName, UserEmail, ModalBottom, TextModal} from './styles'
-import { Button, StyleSheet, Text, View } from 'react-native'
-import { MyButton } from '../../components/Buttons/MyButton'
+import React, { useEffect, useState} from 'react'
+import {ProfileContainer, TopSection, ImgUser, LogoutArea, UserName, UserEmail, ModalBottom, TextModal, ModalBtns, TopImg, TopText} from './styles'
 import { useAuth } from '../../api/Auth'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { ParamsData, stackTypes } from '../../stacks/mainStack'
@@ -12,16 +10,20 @@ import { IconButton } from 'react-native-paper';
 import { colors } from '../../components/colors'
 
 
+
+
 const Profile = () => {
    
 
   const navigation = useNavigation<stackTypes>();
   const route = useRoute<ParamsData>()
-  const id = route.params?.id
-  const email = route.params?.email
-  const userName = route.params?.name
-  const picture = route.params?.picture
-  const [images,setImages] = useState()
+  const id = route.params?.id as number;
+  const name = route.params?.name as string;
+  const email = route.params?.email as string;
+  const cargo = route.params?.cargo as string;
+  const verified = route.params?.verified as boolean;
+  const password = route.params?.password as string;
+  const picture = route.params?.picture;
   const {logOut} = useAuth();
   const [visible, setVisible] = useState(false);
 
@@ -39,16 +41,29 @@ const Profile = () => {
     ],
   })
 }
+const handleUser = async() =>{
+  
+  navigation.push('EditUser',{
+    id: id ,
+    name: name,
+    email: email,
+    cargo: cargo,
+    verified: verified,
+    password: password,
+    picture: picture
+  })
+}
 
   return (
     <ProfileContainer>
       <TopSection>
         <LogoutArea>
-        <IconButton
+        <TopText>Meu perfil</TopText>
+          <IconButton
           onPress={toggleBottomNavigationView}
           icon='menu'
-          size={45}
-          iconColor={colors.primary}
+          size={40}
+          iconColor={colors.white}
         />
         <BottomSheet
           visible={visible}
@@ -56,7 +71,17 @@ const Profile = () => {
           onBackdropPress={toggleBottomNavigationView}
         >
           <ModalBottom>
-          <LogoutBtn
+            <ModalBtns
+             onPress={handleUser}>
+              <TextModal>Editar usuario</TextModal>
+              <IconButton 
+                onPress={handleLogout}
+                icon='account-edit'
+                size={35}
+                iconColor={colors.primary}  
+            />
+          </ModalBtns>
+          <ModalBtns
            onPress={handleLogout}>
             <TextModal>Sair</TextModal>
             <IconButton 
@@ -65,31 +90,19 @@ const Profile = () => {
               size={35}
               iconColor={colors.primary}  
             />
-          </LogoutBtn>
-          </ModalBottom>
+          </ModalBtns>
+        </ModalBottom>
         </BottomSheet>
-          
-        </LogoutArea>
-         <ImgUser source={{uri: picture ? `data:image/png;base64,${picture}`: UserImg }}
-        />
-        <UserName>{userName}</UserName>
-        <UserEmail>{email}</UserEmail>
-        
-      </TopSection>
+          </LogoutArea>
+        </TopSection>
+      <TopImg>
+        <ImgUser source={{uri: picture ? `data:image/png;base64,${picture}`: UserImg }}/>
+          <UserName>{name}</UserName>
+          <UserEmail>{email}</UserEmail>
+      </TopImg>
       
     </ProfileContainer>
   )
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: 'grey',
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-});
 
 export default Profile

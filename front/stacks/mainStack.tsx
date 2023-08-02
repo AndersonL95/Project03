@@ -7,6 +7,7 @@ import Home from '../screens/Home/Home';
 import mainTab from './mainTab';
 import MainAdmTab from './mainAdmTab';
 import { RouteProp } from '@react-navigation/native';
+import EditUser from '../screens/EditUser/EditUser';
 
 
 const Stack = createStackNavigator();
@@ -15,14 +16,14 @@ type StackNavigation = {
     PreLoad: undefined;
     Login: undefined;
     MainTab: undefined
-    AdminTab: {id:number,name:string,email:string,cargo:string,verified:boolean, picture:any,password:string}
+    AdminTab: {id:number,name:string,email:string,cargo:string,verified:boolean, picture:any,password:string},
+    EditUser:{id:number,name:string,email:string,cargo:string,verified:boolean, picture:any,password:string}
     
 }
 export type ParamsData = RouteProp<StackNavigation> 
 export type stackTypes = StackNavigationProp<StackNavigation>
 
 const MainStack = () => {
-    const {authData} = useAuth()
     return(
         <AuthProvider>
             <Stack.Navigator
@@ -35,6 +36,7 @@ const MainStack = () => {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="AdminTab" component={MainAdmTab} />
             <Stack.Screen name="MainTab" component={mainTab} />
+            <Stack.Screen name="EditUser" component={EditUser}/>
             
 
                 

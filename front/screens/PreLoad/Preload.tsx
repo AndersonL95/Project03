@@ -6,19 +6,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { stackTypes } from '../../stacks/mainStack.js';
 import { InforData } from '../../api/ServiceApi'
+import { useAuth } from '../../api/Auth';
 
 
 
 export default function Preload() {
   const navigation = useNavigation<stackTypes>();
   const[load, setLoad] = useState(false);
+  const {refreshToken} = useAuth();
 
   useEffect(() =>{
     const checkToken = async() =>{
       const token = await AsyncStorage.getItem('projectToken');
       if(token) {
-
-      /*  await InforData()
+        //console.log("refresh_token", res)
+        await InforData()
         .then((data)=>{
             //console.log("MEUS DADOS: ",data.user.cargo)
             if(data.user.cargo === 'admin'){
@@ -52,11 +54,11 @@ export default function Preload() {
                   }) 
             }
         })
-        */
-        setTimeout(() => {
+        
+        /*setTimeout(() => {
           setLoad(true);
           navigation.navigate('Login')
-        }, 3000);
+        }, 3000);*/
         
         
       

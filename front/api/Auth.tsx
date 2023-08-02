@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useReducer, useState} from 'react';
+import React, {createContext, useContext, useEffect, useReducer, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {authService} from './AuthService';
 import { Alert } from 'react-native';
@@ -13,6 +13,7 @@ interface AuthContextData {
   authData?: AuthData;
   logIn: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
+  refreshToken: (token:any) => Promise<void>
   
 }
 type Props = {
@@ -23,7 +24,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC<Props> = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();  
-
+  const [refresh,setRefresh] = useState<AuthData>()
   
   async function logIn(email: string, password: string) {
     try {
@@ -42,9 +43,34 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
     setAuthData(undefined);
     AsyncStorage.removeItem('projectToken');
   }
+  async function refreshToken(token:any){
+    try {
+      const refreshData = await authService.refreshToken(token)
+       if(refreshData){
+        setRefresh(refreshData)
+        console.log("REFRESH: ", refreshData)
+        return refresh?.token
+       }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
+useEffect(() =>{
+  const token = AsyncStorage.getItem('projectToken')
+  if(token){
+      const refreshToken = async () =>{
+        authService.refreshToken(token)
+          setTimeout(() =>{
+              refreshToken()
+          },
+              10 * 60 * 1000)
+      }
+      refreshToken()
+  }
+},[])
   return (
-    <AuthContext.Provider value={{authData, logIn, logOut}}>
+    <AuthContext.Provider value={{authData, logIn, logOut, refreshToken}}>
       {children}
     </AuthContext.Provider>
   );
