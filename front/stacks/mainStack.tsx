@@ -8,6 +8,7 @@ import mainTab from './mainTab';
 import MainAdmTab from './mainAdmTab';
 import { RouteProp } from '@react-navigation/native';
 import EditUser from '../screens/EditUser/EditUser';
+import EditPass from '../screens/EditUser/EditPass';
 
 
 const Stack = createStackNavigator();
@@ -17,10 +18,12 @@ type StackNavigation = {
     Login: undefined;
     MainTab: undefined
     AdminTab: {id:number,name:string,email:string,cargo:string,verified:boolean, picture:any,password:string},
-    EditUser:{id:number,name:string,email:string,cargo:string,verified:boolean, picture:any,password:string}
+    EditUser: any /**Buscar outra forma */
+    EditPass:any  /**Buscar outra forma */  
     
 }
 export type ParamsData = RouteProp<StackNavigation> 
+
 export type stackTypes = StackNavigationProp<StackNavigation>
 
 const MainStack = () => {
@@ -37,6 +40,8 @@ const MainStack = () => {
             <Stack.Screen name="AdminTab" component={MainAdmTab} />
             <Stack.Screen name="MainTab" component={mainTab} />
             <Stack.Screen name="EditUser" component={EditUser}/>
+            <Stack.Screen name="EditPass" component={EditPass}/>
+
             
 
                 

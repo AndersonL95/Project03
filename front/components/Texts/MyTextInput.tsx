@@ -19,11 +19,22 @@ const styles = StyleSheet.create({
     }
 })
     
-    
-
-
-export function MyTextInput(props: TextInputProps) {
-    return (
-        <TextInput placeholderTextColor="#999" style={styles.input} {...props} />
-    )
+type props ={
+    value:string,
+    name:string,
+    onChangeText:any
+    placeholder:string
+    keyboardType: any
+    onSubmitEditing:any
 }
+
+export function MyTextInput(props:props){
+    return (
+        <TextInput placeholderTextColor="#999"{...props} style={styles.input}/>
+    ) 
+}
+/*export function MyTextInput(props: TextInputProps) {
+    return (
+        <TextInput  placeholderTextColor="#999" style={styles.input} {...props}  />
+    )
+}*/

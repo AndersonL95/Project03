@@ -6,7 +6,6 @@ import { MyTextInput } from '../../components/Texts/MyTextInput';
 
 export const LoginContainer = styled(container)`
     background-color: ${colors.white};
-    justify-content: center;
     width: 100%;
     height: 100%;
 `;

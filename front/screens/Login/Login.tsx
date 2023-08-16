@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import { StatusBar } from "expo-status-bar";
 import { LoginContainer, TopSection, TopImage, BottomSection, MiddleSetion, PasswordArea, PassInput } from "./style";
 import logo from '../../assets/logo.png';
@@ -10,7 +10,7 @@ import { stackTypes } from "../../stacks/mainStack";
 import { InforData } from "../../api/ServiceApi";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from "../../components/useTogglePasswordVisibility";
-import { Pressable } from "react-native";
+import { Alert, Keyboard, Pressable } from "react-native";
 import Spinner from "../../components/Spinner";
 
 
@@ -21,7 +21,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [loadding,setLoadding] = useState<String>('')
     const {logIn} = useAuth();
-    //const {infor} = useInfor()
+    const [keyboardStatus, setKeyboardStatus] = useState('');
     const handleSignClick = async () => {
         try {
             setTimeout(async()=>{
@@ -32,7 +32,7 @@ const Login = () => {
                           //console.log("MEUTOKEN: "+ res)
                          await InforData()
                             .then((data)=>{
-                               // console.log("MEUS DADOS: ",data.user)
+                           // console.log("MEUS DADOS: ",data.user)
                                 if(data.user.cargo === 'admin'){
 
                                     navigation.push('AdminTab',{
@@ -68,6 +68,8 @@ const Login = () => {
                             })
                             //console.log("FINAL")
 
+                        }else {
+                            Alert.alert('Login ou senha incorretos.')
                         }
                 }   
             },1000)
@@ -77,11 +79,22 @@ const Login = () => {
             alert(error.response.data.message)
         }
     }
-
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+          setKeyboardStatus('Keyboard Shown');
+        });
+        const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+          setKeyboardStatus('Keyboard Hidden');
+        });
+    
+        return () => {
+          showSubscription.remove();
+          hideSubscription.remove();
+        };
+      }, []);
     return (
-        <>
         
-            <StatusBar style="light"/>
+        
             <LoginContainer>
                {
                 loadding === 'loggin in' ? <Spinner/> : ""
@@ -90,11 +103,13 @@ const Login = () => {
                     <TopImage source={logo}/>
                 </TopSection>
                 <MiddleSetion>
-                    <MyTextInput 
+                    <MyTextInput
+                        name="email" 
                         placeholder="E-mail" 
                         value={email} 
                         onChangeText={setEmail}    
                         keyboardType="email-address"
+                        onSubmitEditing={Keyboard.dismiss}
                     />
                     <PasswordArea>
                     <PassInput 
@@ -124,7 +139,7 @@ const Login = () => {
                     />
                 </BottomSection>
             </LoginContainer>
-        </>
+        
     )
 }
 export default Login;

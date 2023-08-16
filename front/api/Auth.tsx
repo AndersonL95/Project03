@@ -52,22 +52,23 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
         return refresh?.token
        }
     } catch (error) {
-      console.log(error)
+      console.log("ERRO:", error)
     }
   }
+
+useEffect(()=>{
   
-useEffect(() =>{
-  const token = AsyncStorage.getItem('projectToken')
-  if(token){
       const refreshToken = async () =>{
+        const token = await AsyncStorage.getItem('projectToken')
+
         authService.refreshToken(token)
           setTimeout(() =>{
               refreshToken()
           },
-              10 * 60 * 1000)
+              10 * 60 * 100)
       }
       refreshToken()
-  }
+  
 },[])
   return (
     <AuthContext.Provider value={{authData, logIn, logOut, refreshToken}}>

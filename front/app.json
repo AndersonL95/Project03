@@ -4,6 +4,15 @@
     "slug": "front",
     "version": "1.0.0",
     "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(front) to access your photos ",
+          "cameraPermission": "Allow $(front) to access your camera"
+        }
+      ]
+    ],
    
     "assetBundlePatterns": [
       "**/*"

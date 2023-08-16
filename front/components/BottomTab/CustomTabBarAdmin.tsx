@@ -8,23 +8,25 @@ import { NavigationHelpers, ParamListBase, TabNavigationState, useRoute } from '
 import { BottomTabDescriptorMap, BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
 import { ParamsData } from '../../stacks/mainStack';
 import { Buffer } from 'buffer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface TabBarProps {
     state: TabNavigationState<ParamListBase>;
     descriptors: BottomTabDescriptorMap;
     navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
-    userData: ParamsData;
 }
   
 export const MyTabBar = ({ state, descriptors, navigation }: TabBarProps) => {
-    const route = useRoute<ParamsData>();
-    const[picture,setPicture] = useState(route.params?.picture);
-  useEffect(()=>{
-    var buffer = Buffer.from(picture.data).toString('base64'); 
-    setPicture(buffer)
-  },[])
-
+    const [image,setImage] = useState()
+    useEffect(()=>{
+        async function getImage(){
+          const picture:any = await AsyncStorage.getItem('profileImg')
+          setImage(JSON.parse(picture))
+        }
+        getImage()
+      },[])   
+ 
 
     const goTo = (screenName:any) => {
         navigation.navigate(screenName);
@@ -43,8 +45,8 @@ export const MyTabBar = ({ state, descriptors, navigation }: TabBarProps) => {
             </TabItem>
             <TabItem onPress={()=>goTo('ProfileAdmin')}>
                 {
-                    picture != ""
-                    ?<ProfileIcon source={{uri:`data:image/png;base64,${picture}` }} />
+                    image != ""
+                    ?<ProfileIcon source={{uri:`data:image/png;base64,${image}` }} />
                     :<ProfileIcon source={AccountIcon} style={{opacity: state.index===3? 1 : 0.5,}}  />
 
 
