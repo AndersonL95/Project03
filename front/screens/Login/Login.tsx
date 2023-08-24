@@ -12,6 +12,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from "../../components/useTogglePasswordVisibility";
 import { Alert, Keyboard, Pressable } from "react-native";
 import Spinner from "../../components/Spinner";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Login = () => {
@@ -20,58 +21,47 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loadding,setLoadding] = useState<String>('')
+    const [user,setUser] = useState([]);
     const {logIn} = useAuth();
     const [keyboardStatus, setKeyboardStatus] = useState('');
+
     const handleSignClick = async () => {
         try {
             setTimeout(async()=>{
+                
                 if(email != '' && password != '') {
-                    const res:void = await logIn(email, password)
+                    await logIn(email, password)
+                    .then((res:any)=>{
+                        setUser(res.user)
                         if(res !=null){
                             setLoadding('loggin in')
-                          //console.log("MEUTOKEN: "+ res)
-                         await InforData()
-                            .then((data)=>{
-                           // console.log("MEUS DADOS: ",data.user)
-                                if(data.user.cargo === 'admin'){
-
-                                    navigation.push('AdminTab',{
-                                        id: data.user._id ,
-                                        name: data.user.name,
-                                        email: data.user.email,
-                                        cargo: data.user.cargo,
-                                        verified: data.user.verified,
-                                        password: data.user.password,
-                                        picture: data.user.picture
-                                    })
-                                }else{
-                                    setLoadding('loggin in')
-                                    navigation.reset({
-                                        index: 1,
-                                        routes: [
-                                          {
-                                            name: 'MainTab', 
-                                            params:{
-                                                id: data.user._id,
-                                                name:data.user.name,
-                                                email:data.user.email,
-                                                cargo: data.user.cargo,
-                                                verified: data.user.verified,
-                                                password: data.user.password
-
-                                             } 
-                                          },
-                                        ],
-                                      }) 
-                                     
-                                }
-                            })
-                            //console.log("FINAL")
-
+                            AsyncStorage.setItem('role',(res.cargo))
+                            if(res.cargo == 'admin'){
+                                navigation.reset({
+                                    index:1,
+                                    routes:[
+                                        {
+                                            name:'AdminTab'
+                                        }
+                                    ]
+                                })
+                            }else{
+                                setLoadding('loggin in')
+                                navigation.reset({
+                                    index: 1,
+                                    routes: [
+                                      {
+                                        name: 'MainTab', 
+                                        
+                                      },
+                                    ],
+                                  }) 
+                            }
                         }else {
                             Alert.alert('Login ou senha incorretos.')
                         }
-                }   
+                    })
+            } 
             },1000)
            
             /**c*/
@@ -96,7 +86,7 @@ const Login = () => {
         
         
             <LoginContainer>
-               {
+              {
                 loadding === 'loggin in' ? <Spinner/> : ""
                }
                 <TopSection>
@@ -143,15 +133,3 @@ const Login = () => {
     )
 }
 export default Login;
-/**if(res == null){
-                    navigation.reset({
-                        index: 1,
-                        routes: [
-                          { name: 'Home' },
-                        ],
-                      })
-                  console.log("RESPONSE:")
-                }
-            }else {
-               return Alert.alert('Campo vazio!');
-            } */

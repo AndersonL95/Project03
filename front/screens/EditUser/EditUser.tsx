@@ -1,6 +1,6 @@
 import {Alert, Image, Keyboard, Text, Touchable, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Button_save, CameraView, EditContainer, ImgUser, InputArea, ModalCamera, TextCamera, TopArea, TopImg, TopSection, TopText } from './styles'
+import { Button_save, CameraView, EditContainer, ImgUser, InputArea, ModalCamera, PassInput, TextCamera, TopArea, TopImg, TopSection, TopText } from './styles'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { ParamsData, stackTypes } from '../../stacks/mainStack'
 import UserImg from '../../assets/conta.png';
@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateUser } from '../../api/ServiceApi'
 import * as ImagePicker from 'expo-image-picker';
 import Modal from "react-native-modal";
+import Spinner from '../../components/Spinner'
 
 const EditUser = () => {
   const route = useRoute<ParamsData>();
@@ -22,6 +23,8 @@ const EditUser = () => {
   const [image, setImage] = useState<any>();
   const [visible, setVisible] = useState<boolean>(false);
   const [keyboardStatus, setKeyboardStatus] = useState('');
+  const [loadding,setLoadding] = useState<boolean>(false)
+
 
 
 
@@ -70,6 +73,7 @@ const EditUser = () => {
     }
 }
   }
+  
   const handleSubmit = async() =>{
     const token = await AsyncStorage.getItem('refreshToken');
     const formData = new FormData();
@@ -80,15 +84,17 @@ const EditUser = () => {
     }
     formData.append('user', file);
     formData.append('name', name);
-    const put = await UpdateUser(id,formData,token)
-    if(put != null){
-      AsyncStorage.removeItem('profileImg');
-      navigation.goBack();
-
-    }else [
-      Alert.alert('Algo errado ocorreu ao modificar usuario!'),
-    ]
+    await UpdateUser(id,formData,token);
+      setTimeout(() =>{
+        AsyncStorage.removeItem('profileImg');
+        navigation.navigate('EditUser');
+      },2000);
+      
+    
+   
   }
+
+
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardStatus('Keyboard Shown');
@@ -103,8 +109,16 @@ const EditUser = () => {
     };
   }, []);
 
+  
+console.log(loadding)
+
+
+
   return (
     <EditContainer>
+       {
+        loadding === true ? <Spinner/> : ""
+        }
       <TopSection>
         <TopArea>
         <IconButton
@@ -176,7 +190,7 @@ const EditUser = () => {
       
       <InputArea>
        
-        <MyTextInput 
+        <PassInput 
           placeholder=''
           value={name}
           onChangeText={setName}

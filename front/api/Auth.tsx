@@ -7,6 +7,7 @@ export interface AuthData {
   token: any;
   email: string;
   password: string,
+  user:{}
 }
 
 interface AuthContextData {
@@ -26,12 +27,13 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();  
   const [refresh,setRefresh] = useState<AuthData>()
   
-  async function logIn(email: string, password: string) {
+  async function logIn(email: string, password: string,user:{}) {
     try {
-      const authData = await authService.login(email, password);
+      const authData = await authService.login(email, password, user);
         if(authData){
           setAuthData(authData);
-          return authData.token
+          //console.log(authData.user)
+          return authData.user
         }else {
           return console.log("ERROR!")
         }
@@ -45,12 +47,13 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
   }
   async function refreshToken(token:any){
     try {
-      const refreshData = await authService.refreshToken(token)
-       if(refreshData){
-        setRefresh(refreshData)
-        console.log("REFRESH: ", refreshData)
+      if(token !=0){
+        const refreshData = await authService.refreshToken(token)
+        if(refreshData){
+          setRefresh(refreshData)
         return refresh?.token
        }
+      }
     } catch (error) {
       console.log("ERRO:", error)
     }

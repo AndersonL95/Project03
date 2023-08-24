@@ -13,7 +13,7 @@ const api = axios.create({
 });
 
 
-const login = (email: string, password: string):Promise<AuthData> =>{
+const login = (email: string, password: string, user:{}):Promise<AuthData> =>{
     
     return new  Promise((resolve, reject) =>{
             api.post('/login',{
@@ -26,6 +26,7 @@ const login = (email: string, password: string):Promise<AuthData> =>{
                         token: AsyncStorage.getItem('projectToken'),
                         email: email,
                         password: password,
+                        user: res.data
                     });
                     return res.data;
                 }else {

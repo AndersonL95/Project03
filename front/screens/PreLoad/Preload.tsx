@@ -17,22 +17,19 @@ export default function Preload() {
 
   useEffect(() =>{
     const checkToken = async() =>{
+      const cargo:any = await AsyncStorage.getItem('role');
+      console.log(cargo);
+
       const token = await AsyncStorage.getItem('projectToken');
       if(token) {
-        //console.log("refresh_token", res)
-        await InforData()
-        .then((data)=>{
-            //console.log("MEUS DADOS: ",data.user.cargo)
-            if(data.user.cargo === 'admin'){
-                
-                navigation.push('AdminTab',{
-                    id: data.user._id ,
-                    name: data.user.name,
-                    email: data.user.email,
-                    cargo: data.user.cargo,
-                    verified: data.user.verified,
-                    password: data.user.password,
-                    picture: data.user.picture
+            if(cargo === 'admin'){
+              navigation.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'AdminTab'
+                    }
+                  ]
                 })
             }else{
                 navigation.reset({
@@ -40,20 +37,12 @@ export default function Preload() {
                     routes: [
                       {
                         name: 'MainTab', 
-                        params:{
-                            id: data.user._id,
-                            name:data.user.name,
-                            email:data.user.email,
-                            cargo: data.user.cargo,
-                            verified: data.user.verified,
-                            password: data.user.password
-
-                         } 
+            
                       },
                     ],
                   }) 
             }
-        })
+        
         
         /*setTimeout(() => {
           setLoad(true);

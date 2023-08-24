@@ -21,7 +21,7 @@ const InforContext = createContext<InforContextData>({} as InforContextData);
 export async function InforData() {
   const token = await AsyncStorage.getItem('projectToken');
   const refresh = await AsyncStorage.getItem('refreshToken')
-  const infoData:any = await apiService.infor(token);
+  const infoData:any = await apiService.infor(refresh);
   if(infoData){
     //console.log("Token:", token)
     //console.log("RefreshToken: ", refresh)
@@ -32,6 +32,7 @@ export async function UpdateUser(id:number,formData:FormData,token:any) {
   try {
     const update = await apiService.updateUser(id,formData,token)
     if(update){
+      
       return update
     }
   } catch (error) {

@@ -60,12 +60,14 @@ const updateUser = async (id:number, formData:FormData, token:any):Promise<updat
           
           formData:formData
         })
+        console.log(res.data)
         return res.data
       }else {
         reject(new Error('Algo de errado'));
         console.log("Error!")
     }
     }).catch(function (error) {
+      Alert.alert("Não foi possivel modificar o usuario.")
       console.log('MEUERRO',JSON.stringify(error))
     });
   })
